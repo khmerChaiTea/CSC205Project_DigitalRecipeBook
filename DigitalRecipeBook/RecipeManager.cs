@@ -15,18 +15,18 @@ namespace DigitalRecipeBook
 		// Parameters:
 		//   filePath: The path of the file where the recipe data will be saved
 		//   recipeBook: The RecipeBook object to be saved
-		public static void SaveRecipeData(string filePath, RecipeBook recipeBook)
+		public static async Task SaveRecipeDataAsync(string filePath, RecipeBook recipeBook)
 		{
-			Console.WriteLine("Saving recipe data...");
 			try
 			{
 				// Serialize the RecipeBook object to a JSON string with indented formatting
 				var json = JsonConvert.SerializeObject(recipeBook, Formatting.Indented);
 
 				// Write the JSON string to the specified file path
-				File.WriteAllText(filePath, json);
+				await File.WriteAllTextAsync(filePath, json);
+                Console.WriteLine("Recipe data saved successfully.");
 
-			}
+            }
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Error saving recipe data: {ex.Message}");
@@ -38,7 +38,7 @@ namespace DigitalRecipeBook
 		//   filePath: The path of the file from which the recipe data will be loaded
 		// Returns:
 		//   A RecipeBook object populated with the data from the file, or a new RecipeBook if the file does not exist
-		public static RecipeBook? LoadRecipeData(string filePath)
+		public static async Task<RecipeBook> LoadRecipeDataAsync(string filePath)
 		{
 			// Check if the file exists
 			if (!File.Exists(filePath))
@@ -47,13 +47,17 @@ namespace DigitalRecipeBook
 				return new RecipeBook();
 			}
 
-			// Read the JSON string from the specified file path
-			var json = File.ReadAllText(filePath);
-
-			// Deserialize the JSON string to a RecipeBook object and return it
-			// Handle null return value
-			var recipeBook = JsonConvert.DeserializeObject<RecipeBook>(json);
-			return recipeBook ?? new RecipeBook();
-		}
+            try
+            {
+                var json = await File.ReadAllTextAsync(filePath);
+                var recipeBook = JsonConvert.DeserializeObject<RecipeBook>(json);
+                return recipeBook ?? new RecipeBook();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading recipe data: {ex.Message}");
+                return new RecipeBook();
+            }
+        }
 	}
 }

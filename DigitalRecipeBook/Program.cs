@@ -16,12 +16,13 @@ namespace DigitalRecipeBook
 		private static string filePath = "recipes.json";
 
 		// Main method to run the application
-		public static void Main()
+		public static async Task Main()
 		{
-			// Load recipe data from file or create a new RecipeBook if file does not exist
-			recipeBook = RecipeManager.LoadRecipeData(filePath) ?? new RecipeBook();
+            // Correctly await the asynchronous method and handle the result
+            RecipeBook loadedRecipeBook = await RecipeManager.LoadRecipeDataAsync(filePath);
+            recipeBook = loadedRecipeBook ?? new RecipeBook();
 
-			Console.WriteLine("Welcome to the Digital Recipe Book!");
+            Console.WriteLine("Welcome to the Digital Recipe Book!");
 
 			// Main loop to present options to the user
 			bool running = true;
@@ -51,7 +52,7 @@ namespace DigitalRecipeBook
 						RemoveRecipe(); // Call method to remove a recipe
 						break;
 					case "5":
-						SaveAndExit(); // Call method to save data and exit
+						await SaveAndExit(); // Call method to save data and exit
 						running = false; // Exit the loop
 						break;
 					default:
@@ -146,15 +147,25 @@ namespace DigitalRecipeBook
 			}
 		}
 
-		// Method to prompt user for cooking instructions and update the recipe
-		private static void UpdateRecipeInstructions(Recipe recipe)
-		{
-			Console.Write("Enter the instructions: ");
-			recipe.UpdateInstructions(Console.ReadLine() ?? throw new InvalidOperationException("Instructions cannot be null."));
-		}
+        // Method to prompt user for cooking instructions and update the recipe
+        private static void UpdateRecipeInstructions(Recipe recipe)
+        {
+            Console.WriteLine("Enter the instructions (type 'done' on a new line to finish):");
+            StringBuilder instructions = new StringBuilder();
+            while (true)
+            {
+                string? line = Console.ReadLine();
+                if (line == null || line.Trim().ToLower() == "done")
+                {
+                    break; // Exit loop when user types 'done'
+                }
+                instructions.AppendLine(line); // Add the input line to the instructions
+            }
+            recipe.UpdateInstructions(instructions.ToString().Trim());
+        }
 
-		// Method to list all recipes in the recipe book
-		private static void ListRecipes()
+        // Method to list all recipes in the recipe book
+        private static void ListRecipes()
 		{
 			if (recipeBook.Recipes.Count == 0)
 			{
@@ -218,16 +229,17 @@ namespace DigitalRecipeBook
 		}
 
 		// Method to save recipe data to a file and exit the application
-		private static void SaveAndExit()
+		private static async Task SaveAndExit()
 		{
 			if (string.IsNullOrEmpty(filePath))
 			{
 				throw new InvalidOperationException("File path cannot be null or empty.");
 			}
 
-			// Save the recipe data to the specified file
-			RecipeManager.SaveRecipeData(filePath, recipeBook);
-			Console.WriteLine("Recipes saved successfully! Goodbye!");
-		}
+            // Save the recipe data to the specified file
+            // Properly awaiting the save task
+            await RecipeManager.SaveRecipeDataAsync(filePath, recipeBook);
+            Console.WriteLine("Recipes saved successfully! Goodbye!");
+        }
 	}
 }
