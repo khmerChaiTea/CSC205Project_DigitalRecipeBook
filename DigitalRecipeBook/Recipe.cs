@@ -6,29 +6,48 @@ using System.Threading.Tasks;
 
 namespace DigitalRecipeBook
 {
-	// One of the core classes for this project
+	// Represents a recipe in the digital recipe book
 	public class Recipe
 	{
-		public string? RecipeName { get; set; }
-		public List<Ingredient> Ingredients {  get; set; }
+		// The name of the recipe (e.g., "Chocolate Cake", "Spaghetti Carbonara")
+		public string RecipeName { get; set; }
+
+		// A list of ingredients required for the recipe
+		public List<Ingredient> Ingredients { get; set; }
+
+		// Cooking instructions for preparing the recipe (nullable)
+		// This property can be null if no instructions are provided
 		public string? Instructions { get; set; }
+
+		// The category or type of recipe (e.g., Dessert, Main Course)
 		public RecipeType Category { get; set; }
 
+		// Constructor to initialize a recipe with its name and category
+		// Parameters:
+		//   name: The name of the recipe (e.g., "Chocolate Cake")
+		//   category: The type or category of the recipe (e.g., Dessert, Main Course)
 		public Recipe(string name, RecipeType category)
 		{
-			RecipeName = name;
-			Category = category;
-			Ingredients = new List<Ingredient>();
+			RecipeName = name;                      // Set the name of the recipe
+			Category = category;                    // Set the category of the recipe
+			Ingredients = new List<Ingredient>();   // Initialize the list of ingredients to an empty list
 		}
 
+		// Adds a new ingredient to the recipe
+		// Parameters:
+		//   ingredient: The ingredient to be added to the recipe
 		public void AddIngredient(Ingredient ingredient)
 		{
-			Ingredients.Add(ingredient);
+			Ingredients.Add(ingredient); // Add the ingredient to the list of ingredients
 		}
 
+		// Updates the cooking instructions for the recipe
+		// Parameters:
+		//   newInstructions: The updated instructions for preparing the recipe
 		public void UpdateInstructions(string newInstructions)
 		{
-			Instructions = newInstructions;
+			Instructions = newInstructions; // Set the new instructions
 		}
 	}
 }
+
