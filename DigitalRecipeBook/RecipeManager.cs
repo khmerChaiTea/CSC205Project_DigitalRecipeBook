@@ -42,7 +42,9 @@ namespace DigitalRecipeBook
 			var json = File.ReadAllText(filePath);
 
 			// Deserialize the JSON string to a RecipeBook object and return it
-			return JsonConvert.DeserializeObject<RecipeBook>(json);
+			// Handle null return value
+			var recipeBook = JsonConvert.DeserializeObject<RecipeBook>(json);
+			return recipeBook ?? new RecipeBook();
 		}
 	}
 }
