@@ -22,15 +22,14 @@ namespace DigitalRecipeBook
             bool running = true;
             while (running)
             {
-                // Display menu options
                 Console.WriteLine("\nChoose an option:");
                 Console.WriteLine("1. Add a new recipe");
                 Console.WriteLine("2. List all recipes");
                 Console.WriteLine("3. Find recipes by category");
-                Console.WriteLine("4. Remove a recipe");
-                Console.WriteLine("5. Save and exit");
+                Console.WriteLine("4. Display a recipe");
+                Console.WriteLine("5. Remove a recipe");
+                Console.WriteLine("6. Save and exit");
 
-                // Read user choice
                 string? choice = Console.ReadLine();
                 switch (choice)
                 {
@@ -44,9 +43,12 @@ namespace DigitalRecipeBook
                         FindRecipesByCategory();
                         break;
                     case "4":
-                        RemoveRecipe();
+                        DisplayRecipe();
                         break;
                     case "5":
+                        RemoveRecipe();
+                        break;
+                    case "6":
                         await SaveAndExit();
                         running = false;
                         break;
@@ -221,6 +223,47 @@ namespace DigitalRecipeBook
                 Console.WriteLine("Invalid category choice.");
             }
         }
+
+        private static void DisplayRecipe()
+        {
+            if (recipeBook.Recipes.Count == 0)
+            {
+                Console.WriteLine("No recipes available to display.");
+                return;
+            }
+
+            // List all recipe names
+            Console.WriteLine("Available recipes:");
+            for (int i = 0; i < recipeBook.Recipes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {recipeBook.Recipes[i].RecipeName}");
+            }
+
+            Console.Write("Enter the number of the recipe you want to view: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= recipeBook.Recipes.Count)
+            {
+                var selectedRecipe = recipeBook.Recipes[choice - 1];
+                DisplayRecipeDetails(selectedRecipe);
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please select a valid recipe number.");
+            }
+        }
+
+        // Method to display details of a selected recipe
+        private static void DisplayRecipeDetails(Recipe recipe)
+        {
+            Console.WriteLine($"\nRecipe: {recipe.RecipeName}");
+            Console.WriteLine($"Category: {recipe.Category}");
+            Console.WriteLine("Ingredients:");
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                Console.WriteLine($"- {ingredient.Quantity} of {ingredient.Name}");
+            }
+            Console.WriteLine($"Instructions: {recipe.Instructions}");
+        }
+
 
         private static void RemoveRecipe()
         {

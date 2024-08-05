@@ -133,21 +133,20 @@ namespace DigitalRecipeBook.Tests
 			Assert.AreEqual("Pancakes", recipeBook.Recipes[0].RecipeName);
 		}
 
-		[TestMethod()]
-		public void AddRecipe_RecipeWithEmptyName_ShouldNotAddRecipe()
-		{
-			// Arrange
-			var recipeBook = new RecipeBook();
-			var recipe = new Recipe(string.Empty, RecipeType.MainCourse);
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AddRecipe_RecipeWithEmptyName_ShouldNotAddRecipe()
+        {
+            // Arrange
+            var recipeBook = new RecipeBook();
 
-			// Act
-			recipeBook.AddRecipe(recipe);
+            // Act
+            recipeBook.AddRecipe(new Recipe("", RecipeType.MainCourse)); // This should throw
 
-			// Assert
-			Assert.AreEqual(0, recipeBook.Recipes.Count); // Assuming empty names are not allowed
-		}
+            // Assert - Handled by ExpectedException
+        }
 
-		[TestMethod()]
+        [TestMethod()]
 		public void AddRecipe_RecipeWithNullIngredients_ShouldHandleGracefully()
 		{
 			// Arrange
