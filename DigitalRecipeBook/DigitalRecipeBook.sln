@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalRecipeBook", "DigitalRecipeBook.csproj", "{F4280ABF-CF7B-4992-8EB8-97A91549E5BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalRecipeBookTests", "..\DigitalRecipeBookTests\DigitalRecipeBookTests.csproj", "{71206A00-CD08-42B6-A333-60F651496374}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F4280ABF-CF7B-4992-8EB8-97A91549E5BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4280ABF-CF7B-4992-8EB8-97A91549E5BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4280ABF-CF7B-4992-8EB8-97A91549E5BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71206A00-CD08-42B6-A333-60F651496374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71206A00-CD08-42B6-A333-60F651496374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71206A00-CD08-42B6-A333-60F651496374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71206A00-CD08-42B6-A333-60F651496374}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

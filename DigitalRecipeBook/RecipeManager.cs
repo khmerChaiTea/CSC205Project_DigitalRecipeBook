@@ -17,11 +17,20 @@ namespace DigitalRecipeBook
 		//   recipeBook: The RecipeBook object to be saved
 		public static void SaveRecipeData(string filePath, RecipeBook recipeBook)
 		{
-			// Serialize the RecipeBook object to a JSON string with indented formatting
-			var json = JsonConvert.SerializeObject(recipeBook, Formatting.Indented);
+			Console.WriteLine("Saving recipe data...");
+			try
+			{
+				// Serialize the RecipeBook object to a JSON string with indented formatting
+				var json = JsonConvert.SerializeObject(recipeBook, Formatting.Indented);
 
-			// Write the JSON string to the specified file path
-			File.WriteAllText(filePath, json);
+				// Write the JSON string to the specified file path
+				File.WriteAllText(filePath, json);
+
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error saving recipe data: {ex.Message}");
+			}
 		}
 
 		// Loads recipe book data from a file in JSON format

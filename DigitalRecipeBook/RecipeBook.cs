@@ -23,7 +23,25 @@ namespace DigitalRecipeBook
 		//   recipe: The recipe to be added
 		public void AddRecipe(Recipe recipe)
 		{
-			Recipes.Add(recipe); // Add the recipe to the list
+			// Check if the recipe name is null, empty, or consists only of white spaces
+			if (string.IsNullOrWhiteSpace(recipe.RecipeName))
+			{
+				// Optionally, handle the case where the name is invalid
+				Console.WriteLine("Recipe name cannot be empty or null.");
+				return; // Do not add the recipe
+			}
+
+			// Check if a recipe with the same name already exists
+			var existingRecipe = Recipes.Find(r => r.RecipeName == recipe.RecipeName);
+			if (existingRecipe == null)
+			{
+				Recipes.Add(recipe); // Add the recipe to the list
+			}
+			else
+			{
+				// Optionally, handle the case where a duplicate is found
+				Console.WriteLine($"A recipe with the name '{recipe.RecipeName}' already exists.");
+			}
 		}
 
 		// Finds a recipe by its name

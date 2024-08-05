@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DigitalRecipeBook
 {
@@ -60,34 +64,58 @@ namespace DigitalRecipeBook
 		// Method to add a new recipe
 		private static void AddRecipe()
 		{
-			// Prompt user to enter the recipe name
-			Console.Write("Enter recipe name: ");
-			string name = Console.ReadLine() ?? throw new InvalidOperationException("Recipe name cannot be null.");
+			// Get recipe name from the user
+			string name = GetRecipeName();
 
-			// Prompt user to choose a category from a list of available categories
+			// Get recipe category from the user
+			RecipeType category = GetRecipeCategory();
+
+			// Create a new Recipe instance
+			var recipe = new Recipe(name, category);
+
+			// Add ingredients to the recipe
+			AddIngredientsToRecipe(recipe);
+
+			// Update cooking instructions for the recipe
+			UpdateRecipeInstructions(recipe);
+
+			// Add the newly created recipe to the recipe book
+			recipeBook.AddRecipe(recipe);
+			Console.WriteLine("Recipe added successfully!");
+		}
+
+		// Method to prompt user for the recipe name
+		private static string GetRecipeName()
+		{
+			Console.Write("Enter recipe name: ");
+			return Console.ReadLine() ?? throw new InvalidOperationException("Recipe name cannot be null.");
+		}
+
+		// Method to prompt user for the recipe category
+		private static RecipeType GetRecipeCategory()
+		{
 			Console.WriteLine("Choose a category:");
 			foreach (var category in Enum.GetValues(typeof(RecipeType)))
 			{
 				Console.WriteLine($"{(int)category}. {category}");
 			}
 
-			// Read and validate category choice
 			int categoryChoice;
 			if (!int.TryParse(Console.ReadLine(), out categoryChoice) || !Enum.IsDefined(typeof(RecipeType), categoryChoice))
 			{
 				Console.WriteLine("Invalid category choice.");
-				return;
+				throw new InvalidOperationException("Invalid category choice.");
 			}
 
-			RecipeType selectedCategory = (RecipeType)categoryChoice;
+			return (RecipeType)categoryChoice;
+		}
 
-			// Create a new Recipe instance
-			var recipe = new Recipe(name, selectedCategory);
-
+		// Method to prompt user for ingredients and add them to the recipe
+		private static void AddIngredientsToRecipe(Recipe recipe)
+		{
 			bool addingIngredients = true;
 			while (addingIngredients)
 			{
-				// Prompt user to enter an ingredient or finish adding ingredients
 				Console.Write("Enter ingredient name (or type 'done' to finish): ");
 				string? ingredientName = Console.ReadLine();
 				if (ingredientName?.ToLower() == "done")
@@ -116,14 +144,13 @@ namespace DigitalRecipeBook
 					recipe.AddIngredient(new Ingredient(ingredientName, quantity));
 				}
 			}
+		}
 
-			// Prompt user to enter cooking instructions
+		// Method to prompt user for cooking instructions and update the recipe
+		private static void UpdateRecipeInstructions(Recipe recipe)
+		{
 			Console.Write("Enter the instructions: ");
 			recipe.UpdateInstructions(Console.ReadLine() ?? throw new InvalidOperationException("Instructions cannot be null."));
-
-			// Add the newly created recipe to the recipe book
-			recipeBook.AddRecipe(recipe);
-			Console.WriteLine("Recipe added successfully!");
 		}
 
 		// Method to list all recipes in the recipe book
@@ -151,7 +178,6 @@ namespace DigitalRecipeBook
 				Console.WriteLine($"{(int)category}. {category}"); // Display available categories
 			}
 
-			// Read and validate category choice
 			int categoryChoice;
 			if (!int.TryParse(Console.ReadLine(), out categoryChoice) || !Enum.IsDefined(typeof(RecipeType), categoryChoice))
 			{
@@ -179,7 +205,6 @@ namespace DigitalRecipeBook
 		// Method to remove a recipe by name
 		private static void RemoveRecipe()
 		{
-			// Prompt user to enter the name of the recipe to remove
 			Console.Write("Enter the name of the recipe to remove: ");
 			string? recipeName = Console.ReadLine();
 			if (recipeName == null)
@@ -188,7 +213,6 @@ namespace DigitalRecipeBook
 				return;
 			}
 
-			// Remove the recipe from the recipe book
 			recipeBook.RemoveRecipe(recipeName);
 			Console.WriteLine("Recipe removed successfully!");
 		}
