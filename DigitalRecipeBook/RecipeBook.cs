@@ -53,14 +53,15 @@ namespace DigitalRecipeBook
         }
 
         // Removes a recipe by its name from the recipe book
-        public void RemoveRecipe(string recipeName)
+        public bool RemoveRecipe(string recipeName)
         {
-            // Find the recipe by name
-            var recipe = FindRecipeByName(recipeName);
-            if (recipe != null)
-            {
-                Recipes.Remove(recipe); // Remove the recipe from the list if found
-            }
-        }
+			var recipeToRemove = Recipes.FirstOrDefault(r => r.RecipeName.Equals(recipeName, StringComparison.OrdinalIgnoreCase));
+			if (recipeToRemove != null)
+			{
+				Recipes.Remove(recipeToRemove);
+				return true; // Return true if the recipe was successfully removed
+			}
+			return false; // Return false if the recipe was not found
+		}
     }
 }

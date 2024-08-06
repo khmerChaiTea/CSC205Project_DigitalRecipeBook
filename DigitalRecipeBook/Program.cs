@@ -11,10 +11,11 @@ namespace DigitalRecipeBook
         private static RecipeBook recipeBook = new RecipeBook(); // RecipeBook instance
         private static string filePath = "recipes.json"; // File path for recipes
 
-        public static async Task Main()
+		// Main entry point for the application
+		public static async Task Main()
         {
-            // Load recipes from file
-            RecipeBook loadedRecipeBook = await RecipeManager.LoadRecipeDataAsync(filePath);
+			// Attempt to load recipes from file, create a new RecipeBook if none exists
+			RecipeBook loadedRecipeBook = await RecipeManager.LoadRecipeDataAsync(filePath);
             recipeBook = loadedRecipeBook ?? new RecipeBook();
 
             Console.WriteLine("Welcome to the Digital Recipe Book!");
@@ -59,7 +60,8 @@ namespace DigitalRecipeBook
             }
         }
 
-        private static void AddRecipe()
+		// Method to add a new recipe to the recipe book
+		private static void AddRecipe()
         {
             string name = GetRecipeName(); // Get recipe name
 
@@ -80,89 +82,37 @@ namespace DigitalRecipeBook
             Console.WriteLine("Recipe added successfully!");
         }
 
-        private static string GetRecipeName()
-        {
-            while (true)
-            {
-                Console.Write("Enter recipe name: ");
-                string? name = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(name))
-                {
-                    return name;
-                }
-                Console.WriteLine("Recipe name cannot be null or empty. Please try again.");
-            }
-        }
+		// Method to prompt the user for the name of the recipe
+		private static string GetRecipeName()
+		{
+			return InputHelper.GetNonEmptyString("Enter recipe name: ");
+		}
 
-        private static RecipeType GetRecipeCategory()
-        {
-            while (true)
-            {
-                Console.WriteLine("Choose a category:");
-                foreach (var category in Enum.GetValues(typeof(RecipeType)))
-                {
-                    Console.WriteLine($"{(int)category}. {category}");
-                }
+		// Method to prompt the user to select a category for the recipe
+		private static RecipeType GetRecipeCategory()
+		{
+			return InputHelper.GetRecipeCategory();
+		}
 
-                if (int.TryParse(Console.ReadLine(), out int categoryChoice) && Enum.IsDefined(typeof(RecipeType), categoryChoice))
-                {
-                    return (RecipeType)categoryChoice;
-                }
-                Console.WriteLine("Invalid category choice. Please try again.");
-            }
-        }
 
-        private static void AddIngredientsToRecipe(Recipe recipe)
-        {
-            bool addingIngredients = true;
-            while (addingIngredients)
-            {
-                Console.Write("Enter ingredient name: ");
-                string? ingredientName = Console.ReadLine();
+		// Method to add ingredients to the recipe
+		private static void AddIngredientsToRecipe(Recipe recipe)
+		{
+			bool addingIngredients = true;
+			while (addingIngredients)
+			{
+				string ingredientName = InputHelper.GetNonEmptyString("Enter ingredient name: ");
+				
+				string quantity = InputHelper.GetNonEmptyString("Enter ingredient quantity: ");
 
-                if (string.IsNullOrWhiteSpace(ingredientName) || ingredientName.Contains("\n") || ingredientName.Contains("\r"))
-                {
-                    Console.WriteLine("Ingredient name cannot be null, empty, or multi-line. Please try again.");
-                }
-                else
-                {
-                    Console.Write("Enter ingredient quantity: ");
-                    string? quantity = Console.ReadLine();
+				recipe.AddIngredient(new Ingredient(ingredientName, quantity)); // Add valid ingredient
 
-                    if (string.IsNullOrWhiteSpace(quantity) || quantity.Contains("\n") || quantity.Contains("\r"))
-                    {
-                        Console.WriteLine("Ingredient quantity cannot be null, empty, or multi-line. Please try again.");
-                    }
-                    else
-                    {
-                        recipe.AddIngredient(new Ingredient(ingredientName, quantity)); // Add valid ingredient
+				addingIngredients = !InputHelper.GetYesOrNo("Are you done? (y/n): ");
+			}
+		}
 
-                        // Ask if the user wants to add another ingredient
-                        bool validResponse = false;
-                        while (!validResponse)
-                        {
-                            Console.Write("Do you want to add another ingredient? (y/n): ");
-                            string? response = Console.ReadLine();
-                            if (response?.ToLower() == "y")
-                            {
-                                validResponse = true;
-                            }
-                            else if (response?.ToLower() == "n")
-                            {
-                                addingIngredients = false; // Stop adding ingredients
-                                validResponse = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid response. Please enter 'y' for yes or 'n' for no.");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void UpdateRecipeInstructions(Recipe recipe)
+		// Method to update the instructions for the recipe
+		private static void UpdateRecipeInstructions(Recipe recipe)
         {
             Console.WriteLine("Enter the instructions (type 'done' on a new line to finish):");
             StringBuilder instructions = new StringBuilder();
@@ -178,7 +128,8 @@ namespace DigitalRecipeBook
             recipe.UpdateInstructions(instructions.ToString().Trim());
         }
 
-        private static void ListRecipes()
+		// Method to list all recipes in the recipe book
+		private static void ListRecipes()
         {
             if (recipeBook.Recipes.Count == 0)
             {
@@ -193,7 +144,8 @@ namespace DigitalRecipeBook
             }
         }
 
-        private static void FindRecipesByCategory()
+		// Method to find recipes by their category
+		private static void FindRecipesByCategory()
         {
             Console.WriteLine("Choose a category:");
             foreach (var category in Enum.GetValues(typeof(RecipeType)))
@@ -224,7 +176,8 @@ namespace DigitalRecipeBook
             }
         }
 
-        private static void DisplayRecipe()
+		// Method to display a specific recipe's details
+		private static void DisplayRecipe()
         {
             if (recipeBook.Recipes.Count == 0)
             {
@@ -264,31 +217,112 @@ namespace DigitalRecipeBook
             Console.WriteLine($"Instructions: {recipe.Instructions}");
         }
 
-
-        private static void RemoveRecipe()
+		// Method to remove a recipe by name
+		private static void RemoveRecipe()
         {
-            Console.Write("Enter the name of the recipe to remove: ");
-            string? recipeName = Console.ReadLine();
-            if (recipeName == null)
-            {
-                Console.WriteLine("Recipe name cannot be null.");
-                return;
-            }
+			// Check if there are any recipes to remove
+			if (recipeBook.Recipes.Count == 0)
+			{
+				Console.WriteLine("There are no recipes to remove.");
+				return; // Exit the method if no recipes are available
+			}
 
-            recipeBook.RemoveRecipe(recipeName);
-            Console.WriteLine("Recipe removed successfully!");
-        }
+			// Prompt the user to enter the name of the recipe to remove
+			Console.Write("Enter the name of the recipe to remove: ");
+			string? recipeName = Console.ReadLine();
+			if (string.IsNullOrWhiteSpace(recipeName))
+			{
+				Console.WriteLine("Recipe name cannot be null or empty.");
+				return; // Exit the method if the input is invalid
+			}
 
-        private static async Task SaveAndExit()
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new InvalidOperationException("File path cannot be null or empty.");
-            }
+			// Attempt to remove the recipe from the recipe book
+			bool removed = recipeBook.RemoveRecipe(recipeName);
+			if (removed)
+			{
+				Console.WriteLine("Recipe removed successfully!");
+			}
+			else
+			{
+				Console.WriteLine($"Recipe '{recipeName}' not found.");
+			}
+		}
 
-            // Save recipes to file
-            await RecipeManager.SaveRecipeDataAsync(filePath, recipeBook);
-            Console.WriteLine("Recipes saved successfully! Goodbye!");
-        }
-    }
+		// Method to save recipes to a file and exit the application
+		private static async Task SaveAndExit()
+		{
+			if (string.IsNullOrEmpty(filePath))
+			{
+				throw new InvalidOperationException("File path cannot be null or empty.");
+			}
+
+			try
+			{
+				await RecipeManager.SaveRecipeDataAsync(filePath, recipeBook);
+				Console.WriteLine("Recipes saved successfully! Goodbye!");
+			}
+			catch (IOException ioEx)
+			{
+				Console.WriteLine($"I/O error saving recipe data: {ioEx.Message}");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Unexpected error saving recipe data: {ex.Message}");
+			}
+		}
+
+		public static class InputHelper
+		{
+			public static string GetNonEmptyString(string prompt)
+			{
+				while (true)
+				{
+					Console.Write(prompt);
+					string? input = Console.ReadLine();
+					if (!string.IsNullOrWhiteSpace(input))
+					{
+						return input;
+					}
+					Console.WriteLine("Input cannot be null or empty. Please try again.");
+				}
+			}
+
+			public static bool GetYesOrNo(string prompt)
+			{
+				while (true)
+				{
+					Console.Write(prompt);
+					string? response = Console.ReadLine();
+					if (response?.ToLower() == "y")
+					{
+						return true;
+					}
+					if (response?.ToLower() == "n")
+					{
+						return false;
+					}
+					Console.WriteLine("Invalid response. Please enter 'y' for yes or 'n' for no.");
+				}
+			}
+
+			public static RecipeType GetRecipeCategory()
+			{
+				while (true)
+				{
+					Console.WriteLine("Choose a category:");
+					foreach (var category in Enum.GetValues(typeof(RecipeType)))
+					{
+						Console.WriteLine($"{(int)category}. {category}");
+					}
+
+					if (int.TryParse(Console.ReadLine(), out int categoryChoice) && Enum.IsDefined(typeof(RecipeType), categoryChoice))
+					{
+						return (RecipeType)categoryChoice;
+					}
+					Console.WriteLine("Invalid category choice. Please try again.");
+				}
+			}
+		}
+
+	}
 }
