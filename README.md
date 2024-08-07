@@ -1,5 +1,7 @@
 # CSC205FinalProject
 
+Below is my outline.
+
 ### **Digital Recipe Book Project Overview**
 
 #### **1. Project Structure**
@@ -12,7 +14,6 @@
 
 **Enums:**
 - `RecipeType` (`Category` for different types of recipes, e.g., Appetizer, Main Course, Dessert ) 
-
 
 #### **2. Class Details**
 
@@ -109,4 +110,6 @@ public class Program
         Console.WriteLine($"Suggested Recipe: {randomRecipe.RecipeName}");
     }
 }
-```
+
+Using Visual Studio 2022, after Cloning this Repo., use CTRL + F5 to run the App.
+The console will Display a loading page with Options. This app use Json file to recode or store the recipe after it is saved. The Json file is located in the ..DigitalRecipeBook\bin\Debug\net8.0\. If you want to save the Json with you recipes, you can manually added to GitHub and manually added put them back in the bin directory. Feel free to give suggestion if you think you can add kool feature to this project.
