@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DigitalRecipeBook;
-using System;
-using System.Collections.Generic;
-
-namespace DigitalRecipeBook.Tests
+﻿namespace DigitalRecipeBook.Tests
 {
-	[TestClass()]
+    [TestClass()]
 	public class RecipeTests
 	{
 		[TestMethod()]

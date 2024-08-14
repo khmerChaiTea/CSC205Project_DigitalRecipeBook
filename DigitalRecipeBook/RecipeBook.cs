@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DigitalRecipeBook
+﻿namespace DigitalRecipeBook
 {
     // Represents a collection of recipes and provides methods to manage them
     public class RecipeBook

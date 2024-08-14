@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DigitalRecipeBook
+﻿namespace DigitalRecipeBook
 {
-	// Represents a recipe in the digital recipe book
-	public class Recipe
+    // Represents a recipe in the digital recipe book
+    public class Recipe
 	{
 		private string recipeName = string.Empty;
 

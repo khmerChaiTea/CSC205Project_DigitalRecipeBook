@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DigitalRecipeBook
+﻿namespace DigitalRecipeBook
 {
     // Represents an ingredient used in a recipe
     public class Ingredient

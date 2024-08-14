@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DigitalRecipeBook
+﻿namespace DigitalRecipeBook
 {
-	// Defines the categories or types of recipes in the digital recipe book
-	public enum RecipeType
+    // Defines the categories or types of recipes in the digital recipe book
+    public enum RecipeType
 	{
 		// Represents an appetizer or starter dish
 		Appetizer,
